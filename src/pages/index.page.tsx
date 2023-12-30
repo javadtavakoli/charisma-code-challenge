@@ -1,57 +1,68 @@
 import List from '@/components/common/list';
 import TokenIcon from '@/components/common/token-icon';
-import Head from 'next/head';
 import React from 'react';
+import DashboardStyles from './index.styles';
 
 export default function Home() {
+  const { Heading, Row, Name, Address, Link } = DashboardStyles;
   return (
     <>
-      <h4>داشبورد</h4>
+      <Heading>داشبورد</Heading>
       <List>
         {[
           {
             body: (
-              <div>
+              <Row>
                 <TokenIcon>BTC</TokenIcon>
-              </div>
+                <Name>بیتکوین</Name>
+                <Address>
+                  1A1zP1eP5QGefi2DMPTfT
+                  <br />
+                  L5SLmv7DivfNa
+                </Address>
+              </Row>
             ),
             id: 'bitcoin'
           },
           {
             body: (
-              <div>
+              <Row>
                 <TokenIcon>BNB</TokenIcon>
-              </div>
+                <Name>بایننس کوین</Name>
+              </Row>
             ),
             id: 'binance coin'
           },
           {
             body: (
-              <div>
+              <Row>
                 <TokenIcon>ETH</TokenIcon>
-              </div>
+                <Name>اتریوم</Name>
+              </Row>
             ),
             id: 'ethereum'
           },
           {
             body: (
-              <div>
+              <Row>
                 <TokenIcon>SOL</TokenIcon>
-              </div>
+                <Name>سولانا</Name>
+              </Row>
             ),
             id: 'solana'
           },
 
           {
             body: (
-              <div>
+              <Row>
                 <TokenIcon>USDT</TokenIcon>
-              </div>
+                <Name>تتر</Name>
+              </Row>
             ),
             id: 'usdt'
           },
           {
-            body: <div>+ مدیریت لیست کوین ها</div>,
+            body: <Link href="/manage-tokens">+ مدیریت لیست کوین ها</Link>,
             id: 'manage tokens'
           }
         ]}
