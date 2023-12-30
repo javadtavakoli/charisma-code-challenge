@@ -13,6 +13,9 @@ const GlobalStyle = createGlobalStyle`
         margin: 0;
         background-color: #1a1a1a;
     }
+    input{
+        font-family: IranSans;
+    }
 
     html, body {
         overscroll-behavior: none;

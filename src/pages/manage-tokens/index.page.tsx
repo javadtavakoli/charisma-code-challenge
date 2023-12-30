@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import TopNav from '@/components/common/top-nav';
 import BackIcon from '@assets/back.svg';
 import SearchIcon from '@assets/search.svg';
+import TextInput from '@/components/common/text-input';
 
 const ManageTokens = () => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const ManageTokens = () => {
         leftComponent={<BackIcon onClick={() => router.push('/')} />}
         rightComponent={<SearchIcon />}
       />
+      <TextInput placeholder="جستجو..." />
     </Container>
   );
 };
