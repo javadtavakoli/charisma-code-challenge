@@ -1,10 +1,13 @@
 import React from 'react';
-import { Container } from './index.styles';
 import { useRouter } from 'next/router';
 import TopNav from '@/components/common/top-nav';
 import BackIcon from '@assets/back.svg';
 import SearchIcon from '@assets/search.svg';
 import TextInput from '@/components/common/text-input';
+import ManageTokenStyles from './index.styles';
+import List from '@/components/common/list';
+import TokenIcon from '@/components/common/token-icon';
+import Switch from '@/components/common/switch';
 
 const ManageTokens = () => {
   const router = useRouter();
@@ -21,6 +24,7 @@ const ManageTokens = () => {
         console.log('res', res);
       });
   }, []);
+  const { Container, Row, Name, SwitchHolder } = ManageTokenStyles;
   return (
     <Container>
       <TopNav
@@ -29,6 +33,71 @@ const ManageTokens = () => {
         rightComponent={<SearchIcon />}
       />
       <TextInput placeholder="جستجو..." />
+      <List>
+        {[
+          {
+            body: (
+              <Row>
+                <TokenIcon>BTC</TokenIcon>
+                <Name>بیتکوین</Name>
+                <SwitchHolder>
+                  <Switch name='bitcoin'/>
+                </SwitchHolder>
+              </Row>
+            ),
+            id: 'bitcoin'
+          },
+          {
+            body: (
+              <Row>
+                <TokenIcon>BNB</TokenIcon>
+                <Name>بایننس کوین</Name>
+                <SwitchHolder>
+                  <Switch name='bnb' />
+                </SwitchHolder>
+              </Row>
+            ),
+            id: 'binance coin'
+          },
+          {
+            body: (
+              <Row>
+                <TokenIcon>ETH</TokenIcon>
+                <Name>اتریوم</Name>
+                <SwitchHolder>
+                  <Switch name='eth' />
+                </SwitchHolder>
+              </Row>
+            ),
+            id: 'ethereum'
+          },
+          {
+            body: (
+              <Row>
+                <TokenIcon>SOL</TokenIcon>
+                <Name>سولانا</Name>
+                <SwitchHolder>
+                  <Switch name='sol'/>
+                </SwitchHolder>
+              </Row>
+            ),
+            id: 'solana'
+          },
+
+          {
+            body: (
+              <Row>
+                <TokenIcon>USDT</TokenIcon>
+                <Name>تتر</Name>
+                <SwitchHolder>
+                  <Switch name='usdt'/>
+                </SwitchHolder>
+              </Row>
+            ),
+            id: 'usdt'
+          }
+        ]}
+      </List>
     </Container>
   );
 };
