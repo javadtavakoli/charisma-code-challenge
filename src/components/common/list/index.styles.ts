@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
-const List = styled.div`
+const List = styled.ul`
+  list-style: none;
+  padding: 0;
   flex: 1;
   width: 100%;
   border-radius: 2.7125rem;
   box-shadow: -4px -4px 10px 0px rgba(31, 31, 31, 0.93), 4px 4px 10px 0px rgba(0, 0, 0, 0.52),
     4px 4px 10px 0px rgba(0, 0, 0, 0.86) inset, -4px -4px 10px 0px rgba(22, 22, 22, 0.69) inset;
 `;
-const Item = styled.div`
+const Item = styled.li`
   padding: 1.56rem 1.44rem;
+  margin: 0;
   &:not(:last-child) {
     position: relative;
     ::after {
