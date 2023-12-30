@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 
 const List = styled.ul`
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  &::-webkit-scrollbar {
+    width: 0.3rem; /* Adjust the width as needed */
+  }
   list-style: none;
   padding: 0;
   flex: 1;
@@ -21,7 +27,7 @@ const Item = styled.li`
       left: 0;
       right: 0;
       height: 0.0625rem;
-      background: ${props=>props.theme.colors.border};
+      background: ${(props) => props.theme.colors.border};
       filter: drop-shadow(0px -4px 0px #000) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     }
   }

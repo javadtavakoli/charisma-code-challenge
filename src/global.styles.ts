@@ -8,9 +8,10 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body{
-        overflow-x: hidden;
+        overflow: hidden;
         font-family: IranSans;
         margin: 0;
+
         background-color: #1a1a1a;
     }
 
