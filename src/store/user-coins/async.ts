@@ -1,10 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IAddCoinAction, IUserCoin } from './types';
-import { generateBitcoinAddress } from '@/utils/bitcoin-address';
+import { generateNewBitcoinAdress } from '@/utils/bitcoin-address';
 
 const Add = createAsyncThunk<IUserCoin, IAddCoinAction>('userCoins/add', async (action) => {
-  if (action.coin.symbol === 'btc') {
-    const bitcoinAddress = await generateBitcoinAddress();
+  if (action.coin.symbol === 'BTC') {
+    const bitcoinAddress = generateNewBitcoinAdress();
+
     return { ...action.coin, address: bitcoinAddress };
   }
   return { ...action.coin };

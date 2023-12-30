@@ -1,63 +1,71 @@
-async function sha256(buffer: ArrayBuffer): Promise<ArrayBuffer> {
-  return crypto.subtle.digest('SHA-256', buffer);
+import * as crypto from 'crypto';
+
+function sha256(data: Buffer): Buffer {
+  return crypto.createHash('sha256').update(data).digest();
 }
 
-export async function generateBitcoinAddress(): Promise<string> {
-  const privateKey = await crypto.subtle.generateKey(
-    {
-      name: 'ECDSA',
-      namedCurve: 'P-256'
-    },
-    true,
-    ['sign', 'verify']
-  );
-
-  // Get the public key from the private key
-  const publicKey = await crypto.subtle.exportKey('spki', privateKey.publicKey);
-
-  // Perform SHA-256 hash on the public key
-  const hashBuffer = await sha256(publicKey);
-
-  // Perform RIPEMD-160 hash on the SHA-256 hash
-  const ripemd160Hash = new Uint8Array(await crypto.subtle.digest('RIPEMD-160', hashBuffer));
-
-  // Add the version byte (0x00 for Mainnet) to the beginning of the RIPEMD-160 hash
-  const extendedRipemd160Hash = new Uint8Array(1 + ripemd160Hash.length);
-  extendedRipemd160Hash.set([0x00], 0);
-  extendedRipemd160Hash.set(ripemd160Hash, 1);
-  // Perform SHA-256 hash on the extended RIPEMD-160 hash
-  const hashBuffer2 = await sha256(extendedRipemd160Hash);
-
-  // Perform SHA-256 hash on the result of the previous SHA-256 hash
-  const hashBuffer3 = await sha256(new Uint8Array(hashBuffer2));
-
-  // Take the first 4 bytes of the result and add them to the end of the extended RIPEMD-160 hash
-  const checksum = new Uint8Array(hashBuffer3.slice(0, 4));
-  const extendedRipemd160HashWithChecksum = new Uint8Array(
-    extendedRipemd160Hash.length + checksum.length
-  );
-  for (let i = 0; i < extendedRipemd160Hash.length; i++) {
-    extendedRipemd160HashWithChecksum[i] = extendedRipemd160Hash[i];
-  }
-  for (let j = 0; j < checksum.length; j++) {
-    extendedRipemd160HashWithChecksum[extendedRipemd160Hash.length + j] = checksum[j];
-  }
-  // Encode the extended RIPEMD-160 hash with checksum in Base58Check
-  const base58CheckEncoded = encodeBase58Check(extendedRipemd160HashWithChecksum);
-
-  return base58CheckEncoded;
+function ripemd160(data: Buffer): Buffer {
+  return crypto.createHash('ripemd160').update(data).digest();
 }
 
-function encodeBase58Check(data: Uint8Array): string {
-  // Base58 characters (excluding 0, O, I, and l)
+function generatePrivateKey(): Buffer {
+  return crypto.randomBytes(32);
+}
+
+function generatePublicKey(privateKey: Buffer): Buffer {
+  const ec = crypto.createECDH('secp256k1');
+  ec.setPrivateKey(privateKey);
+  return Buffer.from(ec.getPublicKey(null, 'compressed'));
+}
+
+function generateLegacyBitcoinAddress(publicKey: Buffer): string {
+  const sha256Hash1 = sha256(publicKey);
+  const ripemd160Hash = ripemd160(sha256Hash1);
+
+  // Version byte for Mainnet: 0x00
+  const versionByte = Buffer.from([0x00]);
+
+  // Add version byte to ripemd160 hash
+  const extendedRipemd160Hash = Buffer.concat([versionByte, ripemd160Hash]);
+
+  // Perform double SHA-256 hashing
+  const sha256Hash2 = sha256(sha256(extendedRipemd160Hash));
+
+  // Take the first 4 bytes as a checksum
+  const checksum = sha256Hash2.slice(0, 4);
+
+  // Concatenate the extended ripemd160 hash and checksum
+  const binaryAddress = Buffer.concat([extendedRipemd160Hash, checksum]);
+
+  // Base58 encode the binary address
+  const base58Address = encodeBase58(binaryAddress);
+
+  return base58Address;
+}
+
+function encodeBase58(data: Buffer): string {
   const base58Chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  let value = BigInt('0x' + data.toString('hex'));
 
-  // Perform Base58Check encoding
-  const leadingZeros = data.findIndex((byte) => byte !== 0);
-  const encoded = Array.from(data)
-    .reverse()
-    .map((byte) => base58Chars[byte])
-    .join('');
+  let result = '';
+  const big58 = BigInt(58);
+  while (value > BigInt(0)) {
+    const remainder = value % big58;
+    value = value / big58;
 
-  return '1'.repeat(leadingZeros) + encoded;
+    result = base58Chars.charAt(Number(remainder)) + result;
+  }
+
+  // Add '1' characters for leading zero bytes
+  for (let i = 0; i < data.length && data[i] === 0; i++) {
+    result = '1' + result;
+  }
+
+  return result;
 }
+
+export const generateNewBitcoinAdress = () => {
+  const privateKey = generatePrivateKey();
+  const publicKey = generatePublicKey(privateKey);
+  return generateLegacyBitcoinAddress(publicKey);
+};
