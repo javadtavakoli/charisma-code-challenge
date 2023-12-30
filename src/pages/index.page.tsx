@@ -1,3 +1,4 @@
+import List from '@/components/common/list';
 import Head from 'next/head';
 import React from 'react';
 
@@ -11,6 +12,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h4>داشبورد</h4>
+      <List>
+        {[
+          {
+            body: <div>body</div>,
+            id: 'bitcoin'
+          },
+          {
+            body: <div>body</div>,
+            id: 'binance coin'
+          },
+          {
+            body: <div>body</div>,
+            id: 'ethereum'
+          },
+          {
+            body: <div>body</div>,
+            id: 'solana'
+          },
+          {
+            body: <div>body</div>,
+            id: 'usdt'
+          },
+          {
+            body: <div>+ مدیریت لیست کوین ها</div>,
+            id: 'manage tokens'
+          },
+        ]}
+      </List>
     </>
   );
 }
