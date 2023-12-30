@@ -13,7 +13,7 @@ const Switch = (props: SwitchProps) => {
         name={props.name}
         id={props.name}
         checked={props.checked}
-        onChange={(e) => props.onChange(e.target.value==="on")}
+        onChange={(e) => props.onChange(e.target.checked)}
       />
       <label htmlFor={props.name}></label>
     </Wrapper>
