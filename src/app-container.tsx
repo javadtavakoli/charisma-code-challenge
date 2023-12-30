@@ -9,7 +9,8 @@ interface AppContainerProps {
 }
 
 const Container = styled.div`
-  width: 100%;
+  max-width: 45rem;
+  margin: 0 auto;
   height: 100vh;
   display: flex;
   flex-direction: column;

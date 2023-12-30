@@ -8,7 +8,6 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   gap: 2.8rem;
-  max-width: 45rem;
   max-height: 100%;
 `;
 const Row = styled.div`
