@@ -3,6 +3,7 @@ import { Container } from './index.styles';
 import { useRouter } from 'next/router';
 import TopNav from '@/components/common/top-nav';
 import BackIcon from '@assets/back.svg';
+import SearchIcon from '@assets/search.svg';
 
 const ManageTokens = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const ManageTokens = () => {
       <TopNav
         centerComponent={<p>مدیریت لیست کوین ها</p>}
         leftComponent={<BackIcon onClick={() => router.push('/')} />}
+        rightComponent={<SearchIcon />}
       />
     </Container>
   );
