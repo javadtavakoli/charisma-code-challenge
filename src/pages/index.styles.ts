@@ -16,6 +16,8 @@ const Address = styled.p`
   font-size: 0.75rem;
   font-weight: 500;
   line-height: normal;
+  max-width: 8.1875rem;
+  word-wrap: break-word;
   text-align: left;
   margin-right: auto;
 `;
