@@ -1,10 +1,28 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-const controller = new AbortController();
-const signal = controller.signal;
+let currentRequest: AbortController | null = null;
 const Search = createAsyncThunk<coin[], string>('coinsList/search', async (keyword) => {
-  controller.abort();
+  const abortController = new AbortController();
+  const signal = abortController.signal;
+
+  try {
+    // If there is an ongoing request, cancel it
+    if (currentRequest) {
+      currentRequest.abort();
+    }
+  } catch (error: any) {
+    console.log('request cancelled');
+  }
+  // Store the current request for future cancellation
+  currentRequest = abortController;
+
+  // Perform the search using fetch or any other asynchronous operation
   const searchResult = await fetch(`/api/tokens?searchStr=${keyword}`, { signal });
-  const fetchedCoins = (await searchResult.json()) as coin[];
+
+  // Handle the response as needed
+  const fetchedCoins = (await searchResult.json()).coins as coin[];
+
+  // Clear the current request as it has completed
+  currentRequest = null;
 
   return fetchedCoins;
 });

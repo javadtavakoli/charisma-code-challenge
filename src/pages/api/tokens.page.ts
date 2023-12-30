@@ -10,7 +10,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<any>) 
     );
 
     setTimeout(() => {
-      res.status(200).json({ cions: filteredCoins });
+      res.status(200).json({ coins: filteredCoins });
       resolve();
     }, 3000 - searchStr?.length * 500);
   });

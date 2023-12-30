@@ -8,22 +8,12 @@ import ManageTokenStyles from './index.styles';
 import List from '@/components/common/list';
 import TokenIcon from '@/components/common/token-icon';
 import Switch from '@/components/common/switch';
+import useManageCoins from './index.logic';
 
 const ManageTokens = () => {
   const router = useRouter();
+  const { managingCoins, search, changeCoinStatus } = useManageCoins();
 
-  React.useEffect(() => {
-    fetch(`/api/tokens?searchStr=b`)
-      .then((response) => response.json())
-      .then((res) => {
-        console.log('res', res);
-      });
-    fetch(`/api/tokens?searchStr=btc`)
-      .then((response) => response.json())
-      .then((res) => {
-        console.log('res', res);
-      });
-  }, []);
   const { Container, Row, Name, SwitchHolder } = ManageTokenStyles;
   return (
     <Container>
@@ -32,71 +22,24 @@ const ManageTokens = () => {
         leftComponent={<BackIcon onClick={() => router.push('/')} />}
         rightComponent={<SearchIcon />}
       />
-      <TextInput placeholder="جستجو..." />
+      <TextInput onChange={(e) => search(e.target.value)} placeholder="جستجو..." />
       <List>
-        {[
-          {
-            body: (
-              <Row>
-                <TokenIcon>BTC</TokenIcon>
-                <Name>بیتکوین</Name>
-                <SwitchHolder>
-                  <Switch name='bitcoin'/>
-                </SwitchHolder>
-              </Row>
-            ),
-            id: 'bitcoin'
-          },
-          {
-            body: (
-              <Row>
-                <TokenIcon>BNB</TokenIcon>
-                <Name>بایننس کوین</Name>
-                <SwitchHolder>
-                  <Switch name='bnb' />
-                </SwitchHolder>
-              </Row>
-            ),
-            id: 'binance coin'
-          },
-          {
-            body: (
-              <Row>
-                <TokenIcon>ETH</TokenIcon>
-                <Name>اتریوم</Name>
-                <SwitchHolder>
-                  <Switch name='eth' />
-                </SwitchHolder>
-              </Row>
-            ),
-            id: 'ethereum'
-          },
-          {
-            body: (
-              <Row>
-                <TokenIcon>SOL</TokenIcon>
-                <Name>سولانا</Name>
-                <SwitchHolder>
-                  <Switch name='sol'/>
-                </SwitchHolder>
-              </Row>
-            ),
-            id: 'solana'
-          },
-
-          {
-            body: (
-              <Row>
-                <TokenIcon>USDT</TokenIcon>
-                <Name>تتر</Name>
-                <SwitchHolder>
-                  <Switch name='usdt'/>
-                </SwitchHolder>
-              </Row>
-            ),
-            id: 'usdt'
-          }
-        ]}
+        {managingCoins.map((coin) => ({
+          body: (
+            <Row>
+              <TokenIcon>{coin.symbol}</TokenIcon>
+              <Name>{coin.faName}</Name>
+              <SwitchHolder>
+                <Switch
+                  name={coin.name}
+                  checked={coin.selected}
+                  onChange={(shouldAdd) => changeCoinStatus(shouldAdd, coin)}
+                />
+              </SwitchHolder>
+            </Row>
+          ),
+          id: coin.name
+        }))}
       </List>
     </Container>
   );
